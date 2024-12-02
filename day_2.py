@@ -1,12 +1,11 @@
 
 def _report_analyser(levels: list[int]) -> bool:
-    safe = True
     if sorted(levels) != levels and sorted(levels, reverse=True) != levels:
-        safe = False
+        return False
     for first, second in zip(levels[:-1], levels[1:]):
         if abs(first - second) < 1 or abs(first - second) > 3:
-            safe = False
-    return safe
+            return False
+    return True
 
 def _reader(filename: str) -> int:
     sum_1 = 0
