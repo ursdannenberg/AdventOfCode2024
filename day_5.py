@@ -1,5 +1,3 @@
-from itertools import permutations
-
 def _reader(filename: str) -> tuple[dict[int, list[int]], list[list[int]]]:
     inverted_rules = {}
     updates = []
