@@ -1,4 +1,4 @@
-def _reader(filename: str) -> dict[str, dict[str, list[tuple[int, int]]]]:
+def _reader(filename: str) -> dict[str, list[tuple[int, int]]]:
     garden = {}
     with open(filename, "r") as file:
         for j, row in enumerate(file):
@@ -9,7 +9,7 @@ def _reader(filename: str) -> dict[str, dict[str, list[tuple[int, int]]]]:
                     garden[plant] = [(i, j)]
     return garden
             
-def _bfs(start: tuple[int, int], plants: list[tuple[int, int]]) -> list[tuple[int, int]]:
+def _bfs(start: tuple[int, int], plants: list[tuple[int, int]]) -> tuple[list[tuple[int, int]], int, int]:
     # Breadth-first search to find neighbouring plants that form a region 
     dirs = ((1, 0), (0, 1), (-1, 0), (0, -1))
     perimeter = 0
@@ -50,7 +50,7 @@ def _bfs(start: tuple[int, int], plants: list[tuple[int, int]]) -> list[tuple[in
                     queue.append(neighbour)
     return region, len(region) * perimeter, len(region) * sides
     
-def _filter(unfiltered: dict[str, list[tuple[int, int]]]) -> list[tuple[int, int]]:
+def _filter(unfiltered: dict[str, list[tuple[int, int]]]) -> tuple[int, int]:
     # Split up areas that share a letter but are not connected.
     filtered = ()
     price_without_discount = 0
