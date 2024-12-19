@@ -1,3 +1,5 @@
+import sys
+
 def _reader(filename):
     registers = {}
     with open(filename, "r") as file:
@@ -11,7 +13,7 @@ def _get_operand(operand, registers):
     operands = {"0": 0, "1": 1, "2": 2, "3": 3, "4": registers["A"], "5": registers["B"], "6": registers["C"], "7": None}
     return operands[operand], int(operand)
 
-def _execute_programme(registers, programme):
+def _execute_programme(registers, programme, once = False):
     ip = 0
     output = ""
     while ip <= len(programme) - 2:
@@ -25,6 +27,8 @@ def _execute_programme(registers, programme):
             case "2":
                 registers["B"] = combo_operand % 8
             case "3":
+                if once:
+                    return output
                 if registers["A"] != 0:
                     ip = literal_operand * 2
             case "4":
@@ -41,7 +45,20 @@ def _execute_programme(registers, programme):
             ip += 4
     return output
 
+def _find_nema(values, programme, a, ind):
+    val = values[ind]
+    for i in range(0, 8):
+        registers = {"A": a + i, "B": 0, "C": 0}
+        output = _execute_programme(registers, programme, once = True)
+        if int(output[0]) == val:
+            if abs(ind) == len(values):
+                print(f"Part 2: {a + i}")
+                sys.exit()
+            elif abs(ind) < len(values):
+                _find_nema(values, programme, (a + i) * 8, ind - 1)
+
 def solver(filename):
     registers, programme = _reader(filename)
-    output = _execute_programme(registers, programme)
-    print(f"Part 1: {output}")
+    print(f"Part 1: {_execute_programme(registers, programme)[0]}")
+    values = tuple(int(value) for value in programme.split(","))
+    _find_nema(values, programme, 0, -1)
